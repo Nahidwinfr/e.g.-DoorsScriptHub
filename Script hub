@@ -1,0 +1,73 @@
+-- Doors Script Hub
+local scriptHub = {}
+
+-- Auto Hide function
+scriptHub["Auto Hide"] = function()
+    local player = game.Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    
+    -- Hide when Rush or Ambush appears
+    local function onEntityDetected(entity)
+        if entity.Name == "Rush" or entity.Name == "Ambush" then
+            for _, object in pairs(workspace:GetChildren()) do
+                if object.Name == "Wardrobe" and (object.Position - character.HumanoidRootPart.Position).magnitude < 20 then
+                    character.HumanoidRootPart.CFrame = object.CFrame
+                end
+            end
+        end
+    end
+
+    workspace.ChildAdded:Connect(onEntityDetected)
+end
+
+-- Speed Boost function
+scriptHub["Speed Boost"] = function()
+    local player = game.Players.LocalPlayer
+    player.Character.Humanoid.WalkSpeed = 50
+end
+
+-- Instant Key Finder function
+scriptHub["Instant Key Finder"] = function()
+    local player = game.Players.LocalPlayer
+    for _, object in pairs(workspace:GetChildren()) do
+        if object.Name == "Key" then
+            player.Character.HumanoidRootPart.CFrame = object.CFrame
+        end
+    end
+end
+
+-- GUI Setup
+local ScreenGui = Instance.new("ScreenGui")
+local Frame = Instance.new("Frame")
+local AutoHideButton = Instance.new("TextButton")
+local SpeedButton = Instance.new("TextButton")
+local KeyFinderButton = Instance.new("TextButton")
+
+ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+Frame.Size = UDim2.new(0, 300, 0, 200)
+Frame.Position = UDim2.new(0.5, -150, 0.5, -100)
+Frame.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+Frame.Parent = ScreenGui
+
+-- Auto Hide Button
+AutoHideButton.Size = UDim2.new(0, 280, 0, 50)
+AutoHideButton.Position = UDim2.new(0, 10, 0, 10)
+AutoHideButton.Text = "Auto Hide"
+AutoHideButton.Parent = Frame
+AutoHideButton.MouseButton1Click:Connect(function() scriptHub["Auto Hide"]() end)
+
+-- Speed Boost Button
+SpeedButton.Size = UDim2.new(0, 280, 0, 50)
+SpeedButton.Position = UDim2.new(0, 10, 0, 70)
+SpeedButton.Text = "Speed Boost"
+SpeedButton.Parent = Frame
+SpeedButton.MouseButton1Click:Connect(function() scriptHub["Speed Boost"]() end)
+
+-- Key Finder Button
+KeyFinderButton.Size = UDim2.new(0, 280, 0, 50)
+KeyFinderButton.Position = UDim2.new(0, 10, 0, 130)
+KeyFinderButton.Text = "Find Key"
+KeyFinderButton.Parent = Frame
+KeyFinderButton.MouseButton1Click:Connect(function() scriptHub["Instant Key Finder"]() end)
+
+ScreenGui.Enabled = true
